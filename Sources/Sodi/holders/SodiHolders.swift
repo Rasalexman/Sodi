@@ -12,10 +12,10 @@ import Foundation
 protocol Holder {
     var tag: TagWrapper {get}
     func getInstance() -> Any?
+    func clear() -> Bool
 }
 
 internal final class SingleHolder<T: Any> : Holder {
-    var tag: TagWrapper
     private var instanceCreator: LambdaWithReturn<T>? = nil
     private var instance: T? = nil
     
@@ -25,12 +25,18 @@ internal final class SingleHolder<T: Any> : Holder {
     }
     
     func getInstance() -> Any? {
-        let inst = instanceCreator?.self()
-        if let currentInstance = inst {
+        if let currentInstance = instanceCreator?.self() {
             self.instance = currentInstance
             self.instanceCreator = nil
         }
         return instance
+    }
+    
+    func clear() -> Bool {
+        let hasInstance = instance != nil
+        instanceCreator = nil
+        instance = nil
+        return hasInstance
     }
 }
 
@@ -46,6 +52,12 @@ internal final class ProviderHolder<T: Any> : Holder {
     func getInstance() -> Any? {
         return provider?.self()
     }
+    
+    func clear() -> Bool {
+        let hasProvider = provider != nil
+        provider = nil
+        return hasProvider
+    }
 }
 
 internal final class EmptyHolder : Holder {
@@ -57,6 +69,10 @@ internal final class EmptyHolder : Holder {
     func getInstance() -> Any? {
        return nil
     }
+    
+    func clear() -> Bool{
+        return false
+    }
 }
 
 extension Holder {
@@ -66,6 +82,6 @@ extension Holder {
             return holderInstance
         }
         
-        throw SodiError.holderNotInitialized(message: "There is no binding holder for tag '\(self.tag.name)")
+        throw SodiError.holderNotInitialized(message: "There is no binding holder for tag '\(self.tag.toString())")
     }
 }

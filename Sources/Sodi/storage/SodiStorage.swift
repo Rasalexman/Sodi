@@ -18,40 +18,49 @@ protocol SodiStorage {
 
 extension SodiStorage {
     
-    mutating func insertHolder(tag: TagWrapper, sodiHolder: Holder) {
+    mutating func insertHolder(tagWrapper: TagWrapper, sodiHolder: Holder) {
         queue.sync {
-            let tagName: String = tag.name
-            let holder = self.storage[tagName]
-            if(holder == nil) {
-                self.storage[tagName] = sodiHolder
+            let tagWrapper = sodiHolder.tag
+            if(!tagWrapper.isEmpty()) {
+                let tagName: String = tagWrapper.toString()
+                let holder = self.storage[tagName]
+                if(holder == nil && !tagName.isEmpty) {
+                    self.storage[tagName] = sodiHolder
+                }
             }
         }
     }
     
     mutating func selectHolder(tagWrapper: TagWrapper) -> Holder {
-        var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
+        if(tagWrapper.isEmpty()) {
+            return EmptyHolder(tagWrapper: tagWrapper)
+        }
         queue.sync {
-            let tagName: String = tagWrapper.name
+            let tagName: String = tagWrapper.toString()
             if let existedHolder = self.storage[tagName] {
-                holder = existedHolder
+                return existedHolder
+            } else {
+                return EmptyHolder(tagWrapper: tagWrapper)
             }
         }
-        return holder
     }
     
     mutating func deleteHolder(tagWrapper: TagWrapper) -> Holder {
-        var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
+        if(tagWrapper.isEmpty()) {
+            return EmptyHolder(tagWrapper: tagWrapper)
+        }
         queue.sync {
-            let tagName: String = tagWrapper.name
+            let tagName: String = tagWrapper.toString()
             if let removedHolder = self.storage.removeValue(forKey: tagName) {
-                holder = removedHolder
+                return removedHolder
+            } else {
+                return EmptyHolder(tagWrapper: tagWrapper)
             }
         }
-        return holder
     }
     
     mutating func hasInstance(tagWrapper: TagWrapper) -> Bool {
-        let tagName: String = tagWrapper.name
+        let tagName: String = tagWrapper.toString()
         return self.storage[tagName] != nil
     }
 }

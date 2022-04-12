@@ -10,9 +10,17 @@ import Foundation
 #endif
 
 final class TagWrapper {
-    let name: String
+    private let name: String
     
-    init(tagName: String) {
-        name = tagName
+    init(anyTag: Any) {
+        name = "\(anyTag)"
+    }
+    
+    func toString() -> String {
+        return name
+    }
+    
+    func isEmpty() -> Bool {
+        return name.isEmpty
     }
 }
