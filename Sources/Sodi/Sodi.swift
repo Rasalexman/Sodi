@@ -4,8 +4,9 @@
 //
 //  Created by Alexander on 12.04.2022.
 //
-
+#if SWIFT_PACKAGE
 import Foundation
+#endif
 
 private final class Sodi : SodiStorage {
     

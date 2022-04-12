@@ -31,7 +31,7 @@ let package = Package(
 //                    checksum: "The checksum of the ZIP archive that contains the XCFramework."
 //                ),
 //                .binaryTarget(
-//                    name: "SomeLocalBinaryPackage",
+//                    name: "SodiLocalBinaryPackage",
 //                    path: "path/to/some.xcframework"
 //                )
         .testTarget(
