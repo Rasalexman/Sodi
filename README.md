@@ -1,2 +1,3 @@
 # Sodi
-Swift Object Dependency Injection(SODI) Library
+
+Swift Object Dependency Injection (SODI)
