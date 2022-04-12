@@ -14,8 +14,8 @@ protocol SodiHolder {
     mutating func getInstance() -> Any?
 }
 
-internal final class SodiSingle<T: Any> : SodiHolder {
-    internal var tag: SodiTagWrapper
+final class SodiSingle<T: Any> : SodiHolder {
+    var tag: SodiTagWrapper
     private var instanceCreator: LambdaWithReturn<T>? = nil
     private var instance: T? = nil
     
@@ -34,8 +34,8 @@ internal final class SodiSingle<T: Any> : SodiHolder {
     }
 }
 
-internal final class SodiProvider<T: Any> : SodiHolder {
-    internal var tag: SodiTagWrapper
+final class SodiProvider<T: Any> : SodiHolder {
+    var tag: SodiTagWrapper
     private var provider: LambdaWithReturn<T>? = nil
     
     init(tagWrapper: SodiTagWrapper, creator: @escaping LambdaWithReturn<T>) {
@@ -48,8 +48,8 @@ internal final class SodiProvider<T: Any> : SodiHolder {
     }
 }
 
-internal final class SodiEmpty : SodiHolder {
-    internal var tag: SodiTagWrapper
+final class SodiEmpty : SodiHolder {
+    var tag: SodiTagWrapper
     init(tagWrapper: SodiTagWrapper) {
         tag = tagWrapper
     }
