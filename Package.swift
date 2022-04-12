@@ -27,7 +27,7 @@ let package = Package(
             dependencies: []),
 //        .binaryTarget(
 //                    name: "SodiRemoteBinaryPackage",
-//                    url: "https://github.com/Rasalexman/Sodi/Sodi.xcarchive",
+//                    url: "https://github.com/Rasalexman/Sodi/xcframework.zip",
 //                    checksum: "The checksum of the ZIP archive that contains the XCFramework."
 //                ),
 //                .binaryTarget(

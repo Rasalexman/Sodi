@@ -9,17 +9,17 @@
 import Foundation
 #endif
 
-protocol SodiHolder {
-    var tag: SodiTagWrapper {get}
-    mutating func getInstance() -> Any?
+protocol Holder {
+    var tag: TagWrapper {get}
+    func getInstance() -> Any?
 }
 
-final class SodiSingle<T: Any> : SodiHolder {
-    var tag: SodiTagWrapper
+internal final class SingleHolder<T: Any> : Holder {
+    var tag: TagWrapper
     private var instanceCreator: LambdaWithReturn<T>? = nil
     private var instance: T? = nil
     
-    init(tagWrapper: SodiTagWrapper, creator: @escaping LambdaWithReturn<T>) {
+    init(tagWrapper: TagWrapper, creator: @escaping LambdaWithReturn<T>) {
         tag = tagWrapper
         instanceCreator = creator
     }
@@ -34,11 +34,11 @@ final class SodiSingle<T: Any> : SodiHolder {
     }
 }
 
-final class SodiProvider<T: Any> : SodiHolder {
-    var tag: SodiTagWrapper
+internal final class ProviderHolder<T: Any> : Holder {
+    var tag: TagWrapper
     private var provider: LambdaWithReturn<T>? = nil
     
-    init(tagWrapper: SodiTagWrapper, creator: @escaping LambdaWithReturn<T>) {
+    init(tagWrapper: TagWrapper, creator: @escaping LambdaWithReturn<T>) {
         tag = tagWrapper
         provider = creator
     }
@@ -48,9 +48,9 @@ final class SodiProvider<T: Any> : SodiHolder {
     }
 }
 
-final class SodiEmpty : SodiHolder {
-    var tag: SodiTagWrapper
-    init(tagWrapper: SodiTagWrapper) {
+internal final class EmptyHolder : Holder {
+    var tag: TagWrapper
+    init(tagWrapper: TagWrapper) {
         tag = tagWrapper
     }
     
@@ -59,7 +59,7 @@ final class SodiEmpty : SodiHolder {
     }
 }
 
-extension SodiHolder {
+extension Holder {
     
     mutating func getHolderValue<T: Any>() throws -> T {
         if let holderInstance = (self.getInstance() as? T) {

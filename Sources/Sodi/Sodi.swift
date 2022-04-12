@@ -8,14 +8,14 @@
 import Foundation
 #endif
 
-typealias LambdaWithReturn<T: Any> = () -> T
+public typealias LambdaWithReturn<T: Any> = () -> T
 
 final class Sodi : SodiStorage {
     
-    lazy var storage: Storage = Storage()
+    internal lazy var storage: Storage = Storage()
     
     // Concurrent synchronization queue
-    let queue: DispatchQueue = DispatchQueue(label: "SodiStorage.queue", attributes: .concurrent)
+    internal let queue: DispatchQueue = DispatchQueue(label: "SodiStorage.queue", attributes: .concurrent)
     
     private init() {}
     
@@ -27,40 +27,40 @@ final class Sodi : SodiStorage {
         objc_sync_exit(lock)
     }
     
-    static func insertHolder(tagWrapper: SodiTagWrapper, sodiHolder: SodiHolder) {
+    internal static func insertHolder(tagWrapper: TagWrapper, sodiHolder: Holder) {
         synced(instance) {
             instance.insertHolder(tag: tagWrapper, sodiHolder: sodiHolder)
         }
     }
     
-    static func selectHolder(tagWrapper: SodiTagWrapper) -> SodiHolder {
+    internal static func selectHolder(tagWrapper: TagWrapper) -> Holder {
         return instance.selectHolder(tagWrapper: tagWrapper)
     }
     
-    static func deleteHolder(tagWrapper: SodiTagWrapper) -> SodiHolder {
+    internal static func deleteHolder(tagWrapper: TagWrapper) -> Holder {
         return instance.deleteHolder(tagWrapper: tagWrapper)
     }
     
-    static func hasInstance(tagWrapper: SodiTagWrapper) -> Bool {
+    internal static func hasInstance(tagWrapper: TagWrapper) -> Bool {
         return instance.hasInstance(tagWrapper: tagWrapper)
     }
 }
 
-func bindSingle<T: Any>(to: Any? = nil, creater: @escaping LambdaWithReturn<T>) {
+public func bindSingle<T: Any>(to: Any? = nil, creater: @escaping LambdaWithReturn<T>) {
     let tagWrapper = createTagWrapper(toTag: to, name: "\(T.self)")
-    let holder = SodiSingle(tagWrapper: tagWrapper, creator: creater)
+    let holder = SingleHolder(tagWrapper: tagWrapper, creator: creater)
     Sodi.insertHolder(tagWrapper: tagWrapper, sodiHolder: holder)
 }
 
-func bindProvider<T: Any>(to: Any? = nil, creater: @escaping LambdaWithReturn<T>) {
+public func bindProvider<T: Any>(to: Any? = nil, creater: @escaping LambdaWithReturn<T>) {
     let tagWrapper = createTagWrapper(toTag: to, name: "\(T.self)")
-    let holder = SodiProvider(tagWrapper: tagWrapper, creator: creater)
+    let holder = ProviderHolder(tagWrapper: tagWrapper, creator: creater)
     Sodi.insertHolder(tagWrapper: tagWrapper, sodiHolder: holder)
 }
 
 public func unbind<T: Any>(from: Any? = nil) -> T? {
     let tagWrapper = createTagWrapper(toTag: from, name: "\(T.self)")
-    var holder = Sodi.deleteHolder(tagWrapper: tagWrapper)
+    let holder = Sodi.deleteHolder(tagWrapper: tagWrapper)
     return holder.getInstance() as? T ?? nil
 }
 
@@ -75,10 +75,10 @@ public func instance<T: Any>(from: Any? = nil) -> T {
     return try! holder.getHolderValue()
 }
 
-private func createTagWrapper(toTag: Any? = nil, name: String) -> SodiTagWrapper {
+private func createTagWrapper(toTag: Any? = nil, name: String) -> TagWrapper {
     var tagName: String = name
     if let obj = toTag {
         tagName = "\(obj.self)"
     }
-    return SodiTagWrapper(tagName: tagName)
+    return TagWrapper(tagName: tagName)
 }

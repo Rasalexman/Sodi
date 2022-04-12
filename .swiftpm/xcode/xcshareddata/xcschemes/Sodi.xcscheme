@@ -45,7 +45,8 @@
       buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
-      useCustomWorkingDirectory = "NO"
+      useCustomWorkingDirectory = "YES"
+      customWorkingDirectory = "/Users/alexander/sodi/Sodi"
       debugDocumentVersioning = "YES">
       <MacroExpansion>
          <BuildableReference

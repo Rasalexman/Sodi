@@ -9,7 +9,7 @@
 import Foundation
 #endif
 
-typealias Storage = [String : SodiHolder]
+typealias Storage = [String : Holder]
 
 protocol SodiStorage {
     var storage: Storage {get set}
@@ -18,7 +18,7 @@ protocol SodiStorage {
 
 extension SodiStorage {
     
-    mutating func insertHolder(tag: SodiTagWrapper, sodiHolder: SodiHolder) {
+    mutating func insertHolder(tag: TagWrapper, sodiHolder: Holder) {
         queue.sync {
             let tagName: String = tag.name
             let holder = self.storage[tagName]
@@ -28,8 +28,8 @@ extension SodiStorage {
         }
     }
     
-    mutating func selectHolder(tagWrapper: SodiTagWrapper) -> SodiHolder {
-        var holder: SodiHolder = SodiEmpty(tagWrapper: tagWrapper)
+    mutating func selectHolder(tagWrapper: TagWrapper) -> Holder {
+        var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
         queue.sync {
             let tagName: String = tagWrapper.name
             if let existedHolder = self.storage[tagName] {
@@ -39,8 +39,8 @@ extension SodiStorage {
         return holder
     }
     
-    mutating func deleteHolder(tagWrapper: SodiTagWrapper) -> SodiHolder {
-        var holder: SodiHolder = SodiEmpty(tagWrapper: tagWrapper)
+    mutating func deleteHolder(tagWrapper: TagWrapper) -> Holder {
+        var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
         queue.sync {
             let tagName: String = tagWrapper.name
             if let removedHolder = self.storage.removeValue(forKey: tagName) {
@@ -50,7 +50,7 @@ extension SodiStorage {
         return holder
     }
     
-    mutating func hasInstance(tagWrapper: SodiTagWrapper) -> Bool {
+    mutating func hasInstance(tagWrapper: TagWrapper) -> Bool {
         let tagName: String = tagWrapper.name
         return self.storage[tagName] != nil
     }

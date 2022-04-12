@@ -9,7 +9,7 @@
 import Foundation
 #endif
 
-final class SodiTagWrapper {
+final class TagWrapper {
     let name: String
     
     init(tagName: String) {
