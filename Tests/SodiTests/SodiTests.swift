@@ -1,7 +1,7 @@
 import XCTest
 @testable import Sodi
 
-final class SodiTests: XCTestCase, ISodi {
+final class SodiTests: XCTestCase {
     
     func testProviderBinded() throws {
         bindProvider(to: ProviderBinded.self) {

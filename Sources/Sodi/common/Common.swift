@@ -9,8 +9,6 @@
 import Foundation
 #endif
 
-typealias LambdaWithReturn<T: Any> = () -> T
-
 enum SodiError : Error {
     case holderNotInitialized(message: String)
 }
