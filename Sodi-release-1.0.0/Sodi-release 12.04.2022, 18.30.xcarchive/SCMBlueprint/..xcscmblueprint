@@ -1,0 +1,26 @@
+{
+  "DVTSourceControlWorkspaceBlueprintLocationsKey" : {
+    "5582493B66E5C79AFC7099ACA28DE7A1259502C9" : {
+      "DVTSourceControlBranchIdentifierKey" : "main",
+      "DVTSourceControlLocationRevisionKey" : "38302094932b8cf64e09f7a3c484cba53fd1e1b4",
+      "DVTSourceControlBranchOptionsKey" : 4,
+      "DVTSourceControlBranchRemoteNameKey" : "origin",
+      "DVTSourceControlWorkspaceBlueprintLocationTypeKey" : "DVTSourceControlBranch"
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "5582493B66E5C79AFC7099ACA28DE7A1259502C9",
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "CA16D571-D09C-40FD-847B-32278B9C8118",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "5582493B66E5C79AFC7099ACA28DE7A1259502C9" : "Sodi\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : ".",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : ".",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:Rasalexman\/Sodi.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5582493B66E5C79AFC7099ACA28DE7A1259502C9"
+    }
+  ]
+}

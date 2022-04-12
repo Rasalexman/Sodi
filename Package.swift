@@ -12,7 +12,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Sodi",
-            targets: ["Sodi"]),
+            targets: ["Sodi"]
+        ),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -24,6 +25,15 @@ let package = Package(
         .target(
             name: "Sodi",
             dependencies: []),
+//        .binaryTarget(
+//                    name: "SodiRemoteBinaryPackage",
+//                    url: "https://github.com/Rasalexman/Sodi/archive/refs/tags/1.0.0.zip",
+//                    checksum: "The checksum of the ZIP archive that contains the XCFramework."
+//                ),
+//                .binaryTarget(
+//                    name: "SomeLocalBinaryPackage",
+//                    path: "path/to/some.xcframework"
+//                )
         .testTarget(
             name: "SodiTests",
             dependencies: ["Sodi"]),
