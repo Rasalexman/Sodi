@@ -3,20 +3,10 @@ import XCTest
 
 final class SodiTests: XCTestCase {
     
-    override init() {
-        super.init()
-        
-        bindSingle(to: SingleBinded.self) {
-            SingleBindedInstance()
-        }
-        
+    func testProviderBinded() throws {
         bindProvider(to: ProviderBinded.self) {
             ProviderBindedInstance()
         }
-    }
-    
-    
-    func testProviderBinded() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
@@ -25,6 +15,9 @@ final class SodiTests: XCTestCase {
     }
     
     func testSingleBinded() throws {
+        bindSingle(to: SingleBinded.self) {
+            SingleBindedInstance()
+        }
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
