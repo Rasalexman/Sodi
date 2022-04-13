@@ -23,4 +23,8 @@ final class TagWrapper {
     func isEmpty() -> Bool {
         return name.isEmpty
     }
+    
+    func isNotEmpty() -> Bool {
+        return !isEmpty()
+    }
 }
