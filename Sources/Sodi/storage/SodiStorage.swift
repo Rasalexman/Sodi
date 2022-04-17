@@ -32,32 +32,31 @@ extension SodiStorage {
     }
     
     mutating func selectHolder(tagWrapper: TagWrapper) -> Holder {
-        if(tagWrapper.isNotEmpty()) {
-            var selectResult: Holder = EmptyHolder(tagWrapper: tagWrapper)
+        var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
+        if tagWrapper.isNotEmpty() {
             queue.sync {
                 let tagName: String = tagWrapper.toString()
                 if let existedHolder = self.storage[tagName] {
-                    selectResult = existedHolder
+                    holder = existedHolder
                 }
             }
         }
         
-        return EmptyHolder(tagWrapper: tagWrapper)
+        return holder
     }
     
     mutating func deleteHolder(tagWrapper: TagWrapper) -> Holder {
-        //
-        if(tagWrapper.isNotEmpty()) {
-            var deleteResult = EmptyHolder(tagWrapper: tagWrapper)
+        var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
+        if tagWrapper.isNotEmpty() {
             queue.sync {
                 let tagName: String = tagWrapper.toString()
                 if let removedHolder = self.storage.removeValue(forKey: tagName) {
-                    deleteResult = removedHolder
+                    holder = removedHolder
                 }
             }
         }
         
-        return deleteResult
+        return holder
     }
     
     mutating func hasInstance(tagWrapper: TagWrapper) -> Bool {

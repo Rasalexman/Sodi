@@ -16,6 +16,7 @@ protocol Holder {
 }
 
 internal final class SingleHolder<T: Any> : Holder {
+    var tag: TagWrapper
     private var instanceCreator: LambdaWithReturn<T>? = nil
     private var instance: T? = nil
     
