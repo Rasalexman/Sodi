@@ -9,11 +9,15 @@
 import Foundation
 #endif
 
-final class TagWrapper {
+public class TagWrapper : ITagger {
     private let name: String
     
     init(anyTag: Any) {
-        name = "\(anyTag)"
+        if let stringTag = anyTag as? String {
+            name = stringTag
+        } else {
+            name = "\(anyTag)"
+        }
     }
     
     func toString() -> String {
@@ -26,5 +30,13 @@ final class TagWrapper {
     
     func isNotEmpty() -> Bool {
         return !isEmpty()
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
+    
+    public static func ==(lhs: TagWrapper, rhs: TagWrapper) -> Bool {
+        return lhs.toString() == rhs.toString()
     }
 }

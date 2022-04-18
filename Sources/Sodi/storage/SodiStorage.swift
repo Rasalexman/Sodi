@@ -10,15 +10,17 @@ import Foundation
 #endif
 
 typealias Storage = [String : Holder]
+typealias Modules = Set<String>
 
 protocol SodiStorage {
     var storage: Storage {get set}
+    var modules: Modules {get set}
     var queue: DispatchQueue {get}
 }
 
 extension SodiStorage {
     
-    mutating func insertHolder(tagWrapper: TagWrapper, sodiHolder: Holder) {
+    mutating func insertHolder(sodiHolder: Holder) {
         queue.sync {
             let tagWrapper = sodiHolder.tag
             if(!tagWrapper.isEmpty()) {
@@ -62,5 +64,31 @@ extension SodiStorage {
     mutating func hasInstance(tagWrapper: TagWrapper) -> Bool {
         let tagName: String = tagWrapper.toString()
         return self.storage[tagName] != nil
+    }
+    
+    mutating func addModule(sodiModule: ISodiModule) -> Bool {
+        let hasModule = hasModule(sodiModule: sodiModule)
+        if !hasModule {
+            queue.sync {
+                sodiModule.create()
+                modules.insert(sodiModule.toString())
+            }
+        }
+        return !hasModule
+    }
+    
+    mutating func removeModule(sodiModule: ISodiModule) -> Bool {
+        let hasModule = hasModule(sodiModule: sodiModule)
+        if hasModule {
+            queue.sync {
+                sodiModule.destroy()
+                modules.remove(sodiModule.toString())
+            }
+        }
+        return hasModule
+    }
+    
+    mutating func hasModule(sodiModule: ISodiModule) -> Bool {
+        return modules.contains(sodiModule.toString())
     }
 }
