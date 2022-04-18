@@ -87,6 +87,7 @@ public extension ISodi {
         }
     }
     
+    @discardableResult
     func unbind(from: Any) -> Bool {
         let tagWrapper = TagWrapper(anyTag: from)
         let holder = Sodi.deleteHolder(tagWrapper: tagWrapper)
@@ -98,10 +99,12 @@ public extension ISodi {
         return Sodi.hasInstance(tagWrapper: tagWrapper)
     }
     
+    @discardableResult
     func importModule(sodiModule: ISodiModule) -> Bool {
         return Sodi.addModule(sodiModule: sodiModule)
     }
     
+    @discardableResult
     func removeModule(sodiModule: ISodiModule) -> Bool {
         return Sodi.removeModule(sodiModule: sodiModule)
     }

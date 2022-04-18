@@ -4,8 +4,9 @@
 //
 //  Created by Alexander on 18.04.2022.
 //
-
+#if SWIFT_PACKAGE
 import Foundation
+#endif
 
 public typealias ModuleCreator = (ISodi) -> Void
 
