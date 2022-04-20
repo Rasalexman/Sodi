@@ -15,20 +15,18 @@ typealias Modules = Set<String>
 protocol SodiStorage {
     var storage: Storage {get set}
     var modules: Modules {get set}
-    var queue: DispatchQueue {get}
+   // var queue: DispatchQueue {get}
 }
 
 extension SodiStorage {
     
     mutating func insertHolder(sodiHolder: Holder) {
-        queue.sync {
-            let tagWrapper = sodiHolder.tag
-            if(!tagWrapper.isEmpty()) {
-                let tagName: String = tagWrapper.toString()
-                let holder = self.storage[tagName]
-                if(holder == nil && !tagName.isEmpty) {
-                    self.storage[tagName] = sodiHolder
-                }
+        let tagWrapper = sodiHolder.tag
+        if(!tagWrapper.isEmpty()) {
+            let tagName: String = tagWrapper.toString()
+            let holder = self.storage[tagName]
+            if(holder == nil && !tagName.isEmpty) {
+                self.storage[tagName] = sodiHolder
             }
         }
     }
@@ -36,11 +34,9 @@ extension SodiStorage {
     mutating func selectHolder(tagWrapper: TagWrapper) -> Holder {
         var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
         if tagWrapper.isNotEmpty() {
-            queue.sync {
-                let tagName: String = tagWrapper.toString()
-                if let existedHolder = self.storage[tagName] {
-                    holder = existedHolder
-                }
+            let tagName: String = tagWrapper.toString()
+            if let existedHolder = self.storage[tagName] {
+                holder = existedHolder
             }
         }
         
@@ -50,11 +46,9 @@ extension SodiStorage {
     mutating func deleteHolder(tagWrapper: TagWrapper) -> Holder {
         var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
         if tagWrapper.isNotEmpty() {
-            queue.sync {
-                let tagName: String = tagWrapper.toString()
-                if let removedHolder = self.storage.removeValue(forKey: tagName) {
-                    holder = removedHolder
-                }
+            let tagName: String = tagWrapper.toString()
+            if let removedHolder = self.storage.removeValue(forKey: tagName) {
+                holder = removedHolder
             }
         }
         
@@ -69,10 +63,8 @@ extension SodiStorage {
     mutating func addModule(sodiModule: ISodiModule) -> Bool {
         let hasModule = hasModule(sodiModule: sodiModule)
         if !hasModule {
-            queue.sync {
-                sodiModule.create()
-                modules.insert(sodiModule.toString())
-            }
+            sodiModule.create()
+            modules.insert(sodiModule.toString())
         }
         return !hasModule
     }
@@ -80,10 +72,8 @@ extension SodiStorage {
     mutating func removeModule(sodiModule: ISodiModule) -> Bool {
         let hasModule = hasModule(sodiModule: sodiModule)
         if hasModule {
-            queue.sync {
-                sodiModule.destroy()
-                modules.remove(sodiModule.toString())
-            }
+            sodiModule.destroy()
+            modules.remove(sodiModule.toString())
         }
         return hasModule
     }

@@ -4,14 +4,14 @@ import XCTest
 final class SodiTests: XCTestCase, ISodi {
     
     let testModule = sodiModule { sodi in
-        DispatchQueue.global().async {
+        //DispatchQueue.global().async {
             sodi.bindSingle(to: SingleBinded.self) {
                 SingleBindedInstance()
             }
             sodi.bindProvider(to: ProviderBinded.self) {
                 ProviderBindedInstance()
             }
-        }
+        //}
     }
     
     func testProviderBinded() throws {
@@ -19,22 +19,22 @@ final class SodiTests: XCTestCase, ISodi {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        DispatchQueue.main.async {
+        //DispatchQueue.main.async {
             let providerInstance: ProviderBinded = instance()
             XCTAssertEqual(providerInstance.sayHello(), providerInstance.keyWord)
-        }
+        //}
         
     }
     
     func testSingleBinded() throws {
-        importModule(sodiModule: testModule)
+        importModule(sodiModule: self.testModule)
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        DispatchQueue.main.async {
+        //DispatchQueue.main.async {
             let singleInstance: SingleBinded = instance()
             XCTAssertEqual(singleInstance.sayHello(), singleInstance.keyWord)
-        }
+        //}
     }
     
     func testImportModules() {
