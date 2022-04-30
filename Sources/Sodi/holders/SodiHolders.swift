@@ -34,7 +34,7 @@ internal final class SingleHolder<T: Any> : Holder {
     }
     
     func clear() -> Bool {
-        let hasInstance = instance != nil
+        let hasInstance = instance != nil || instanceCreator != nil
         instanceCreator = nil
         instance = nil
         return hasInstance

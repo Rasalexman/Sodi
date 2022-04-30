@@ -34,8 +34,8 @@ let package = Package(
 //                    name: "SodiLocalBinaryPackage",
 //                    path: "/Users/alexander/sodi/Sodi/Sodi.xcarchive"
 //                )
-        .testTarget(
-            name: "SodiTests",
-            dependencies: ["Sodi"])
+//        .testTarget(
+//            name: "SodiTests",
+//            dependencies: ["Sodi"])
     ]
 )

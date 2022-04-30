@@ -37,6 +37,14 @@ final class SodiTests: XCTestCase, ISodi {
         //}
     }
     
+    func testUnbindInstance() throws {
+        importModule(sodiModule: self.testModule)
+        let isInstanceDeleted = unbind(from: SingleBinded.self)
+        XCTAssertEqual(isInstanceDeleted, true)
+        let hasSingleInstance = hasInstance(from: SingleBinded.self)
+        XCTAssertEqual(hasSingleInstance, false)
+    }
+    
     func testImportModules() {
         let firstImport = importModule(sodiModule: testModule)
         let secondImport = importModule(sodiModule: testModule)
