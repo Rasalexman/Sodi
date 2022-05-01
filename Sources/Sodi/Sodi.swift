@@ -14,17 +14,14 @@ public protocol ISodi {
     
 }
 
-final class Sodi : SodiStorage, ISodi {
+internal final class Sodi {
+    internal typealias Storage = [String : Holder]
+    internal typealias Modules = Set<String>
     
-    internal lazy var storage: Storage = Storage()
-    internal lazy var modules: Modules = Modules()
+    private static var localStorage: Storage = Storage()
+    private static var localModules: Modules = Modules()
     
-    // Concurrent synchronization queue
-    //internal let queue: DispatchQueue = Sodi.instanceQueue
-    //
     private init() {}
-    //
-    private static var instance: SodiStorage = Sodi()
     
     private static func synced(_ lock: Any, closure: () -> Void) {
         if(objc_sync_enter(lock) == OBJC_SYNC_SUCCESS) {
@@ -33,52 +30,83 @@ final class Sodi : SodiStorage, ISodi {
         }
     }
     
-    private static let instanceQueue: DispatchQueue = DispatchQueue(label: "SodiStaticStorage.queue")
-    
     internal static func insertHolder(sodiHolder: Holder) {
-        instanceQueue.async(flags: .barrier) {
-            instance.insertHolder(sodiHolder: sodiHolder)
+        let tagWrapper = sodiHolder.tag
+        if(!tagWrapper.isEmpty()) {
+            let tagName: String = tagWrapper.toString()
+            synced(localStorage) {
+                let holder = localStorage[tagName]
+                if(holder == nil && !tagName.isEmpty) {
+                    localStorage[tagName] = sodiHolder
+                }
+            }
         }
     }
     
     internal static func selectHolder(tagWrapper: TagWrapper) -> Holder {
         var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
-        instanceQueue.sync {
-            holder = instance.selectHolder(tagWrapper: tagWrapper)
+        if tagWrapper.isNotEmpty() {
+            let tagName: String = tagWrapper.toString()
+            synced(localStorage) {
+                if let existedHolder = localStorage[tagName] {
+                    holder = existedHolder
+                }
+            }
         }
         return holder
     }
     
     internal static func deleteHolder(tagWrapper: TagWrapper) -> Holder {
         var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
-        instanceQueue.async(flags: .barrier) {
-            holder = instance.deleteHolder(tagWrapper: tagWrapper)
+        if tagWrapper.isNotEmpty() {
+            let tagName: String = tagWrapper.toString()
+            synced(localStorage) {
+                if let removedHolder = localStorage.removeValue(forKey: tagName) {
+                    holder = removedHolder
+                }
+            }
         }
+        
         return holder
     }
     
     internal static func hasInstance(tagWrapper: TagWrapper) -> Bool {
-        var hasLocalModule = false
-        instanceQueue.sync {
-            hasLocalModule = instance.hasInstance(tagWrapper: tagWrapper)
+        var hasInstanceInStorage = false
+        let tagName: String = tagWrapper.toString()
+        synced(localStorage) {
+            hasInstanceInStorage = localStorage[tagName] != nil
         }
-        return hasLocalModule
+        return hasInstanceInStorage
     }
     
     internal static func addModule(sodiModule: ISodiModule) -> Bool {
-        var moduleWasAdded = false
-        instanceQueue.sync {
-            moduleWasAdded = instance.addModule(sodiModule: sodiModule)
+        let hasModule = hasModule(sodiModule: sodiModule)
+        if !hasModule {
+            sodiModule.create()
+            synced(localModules) {
+                localModules.insert(sodiModule.toString())
+            }
         }
-        return moduleWasAdded
+        return !hasModule
     }
     
     internal static func removeModule(sodiModule: ISodiModule) -> Bool {
-        var moduleWasDeleted = false
-        instanceQueue.sync {
-            moduleWasDeleted = instance.removeModule(sodiModule: sodiModule)
+        let hasModule = hasModule(sodiModule: sodiModule)
+        if hasModule {
+            sodiModule.destroy()
+            synced(localModules) {
+                localModules.remove(sodiModule.toString())
+            }
         }
-        return moduleWasDeleted
+        return hasModule
+    }
+    
+    private static func hasModule(sodiModule: ISodiModule) -> Bool {
+        var alreadyHasModule = false
+        synced(localModules) {
+            alreadyHasModule = localModules.contains(sodiModule.toString())
+        }
+        return alreadyHasModule
     }
 }
 
@@ -109,6 +137,7 @@ public extension ISodi {
         return holder.clear()
     }
     
+    @discardableResult
     func hasInstance(from: Any) -> Bool {
         let tagWrapper = TagWrapper(anyTag: from)
         return Sodi.hasInstance(tagWrapper: tagWrapper)
