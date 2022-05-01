@@ -22,8 +22,8 @@ final class SodiTests: XCTestCase, ISodi {
     }
     
     func testProviderBinded() throws {
-        _ = importModule(sodiModule: self.testModule)
-        _ = importModule(sodiModule: self.secondTestModule)
+        importModule(sodiModule: self.testModule)
+        importModule(sodiModule: self.secondTestModule)
         
         let providerInstance: ProviderBinded = instance()
         XCTAssertEqual(providerInstance.sayHello(), providerInstance.keyWord)

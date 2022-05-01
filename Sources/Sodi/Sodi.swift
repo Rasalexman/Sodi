@@ -80,31 +80,33 @@ internal final class Sodi {
     }
     
     internal static func addModule(sodiModule: ISodiModule) -> Bool {
-        let hasModule = hasModule(sodiModule: sodiModule)
+        let moduleName = sodiModule.toString()
+        let hasModule = hasModule(moduleName: moduleName)
         if !hasModule {
             sodiModule.create()
             synced(localModules) {
-                localModules.insert(sodiModule.toString())
+                localModules.insert(moduleName)
             }
         }
         return !hasModule
     }
     
     internal static func removeModule(sodiModule: ISodiModule) -> Bool {
-        let hasModule = hasModule(sodiModule: sodiModule)
+        let moduleName = sodiModule.toString()
+        let hasModule = hasModule(moduleName: moduleName)
         if hasModule {
             sodiModule.destroy()
             synced(localModules) {
-                localModules.remove(sodiModule.toString())
+                localModules.remove(moduleName)
             }
         }
         return hasModule
     }
     
-    private static func hasModule(sodiModule: ISodiModule) -> Bool {
+    internal static func hasModule(moduleName: String) -> Bool {
         var alreadyHasModule = false
         synced(localModules) {
-            alreadyHasModule = localModules.contains(sodiModule.toString())
+            alreadyHasModule = localModules.contains(moduleName)
         }
         return alreadyHasModule
     }
@@ -151,6 +153,11 @@ public extension ISodi {
     @discardableResult
     func removeModule(sodiModule: ISodiModule) -> Bool {
         return Sodi.removeModule(sodiModule: sodiModule)
+    }
+    
+    @discardableResult
+    func hasModule(moduleName: String) -> Bool {
+        return Sodi.hasModule(moduleName: moduleName)
     }
 }
 
