@@ -3,27 +3,32 @@ import XCTest
 
 final class SodiTests: XCTestCase, ISodi {
     
-    let testModule = sodiModule { sodi in
-        //DispatchQueue.global().async {
-            sodi.bindSingle(to: SingleBinded.self) {
-                SingleBindedInstance()
-            }
-            sodi.bindProvider(to: ProviderBinded.self) {
-                ProviderBindedInstance()
-            }
-        //}
+    let testModule = sodiModule(moduleName: "TestModule") { sodi in
+        sodi.bindSingle(to: SingleBinded.self) {
+            SingleBindedInstance()
+        }
+        sodi.bindProvider(to: ProviderBinded.self) {
+            ProviderBindedInstance()
+        }
+    }
+    
+    let secondTestModule = sodiModule(moduleName: "SecondTestModule") { sodi in
+        sodi.bindSingle(to: SecondSingle.self) {
+            SecondSingleBindedInstance()
+        }
+        sodi.bindProvider(to: SecondProvider.self) {
+            SecondProviderBindedInstance()
+        }
     }
     
     func testProviderBinded() throws {
-        importModule(sodiModule: self.testModule)
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        //DispatchQueue.main.async {
-            let providerInstance: ProviderBinded = instance()
-            XCTAssertEqual(providerInstance.sayHello(), providerInstance.keyWord)
-        //}
+        _ = importModule(sodiModule: self.testModule)
+        _ = importModule(sodiModule: self.secondTestModule)
         
+        let providerInstance: ProviderBinded = instance()
+        XCTAssertEqual(providerInstance.sayHello(), providerInstance.keyWord)
+        let secondProviderInstance: SecondProvider = instance()
+        XCTAssertEqual(secondProviderInstance.sayHello(), secondProviderInstance.keyWord)
     }
     
     func testSingleBinded() throws {
@@ -32,8 +37,8 @@ final class SodiTests: XCTestCase, ISodi {
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
         //DispatchQueue.main.async {
-            let singleInstance: SingleBinded = instance()
-            XCTAssertEqual(singleInstance.sayHello(), singleInstance.keyWord)
+        let singleInstance: SingleBinded = instance()
+        XCTAssertEqual(singleInstance.sayHello(), singleInstance.keyWord)
         //}
     }
     

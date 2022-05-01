@@ -33,8 +33,8 @@ final class SodiModule : ISodiModule {
     internal var instances: Set<TagWrapper> = Set()
     internal var creator: ModuleCreator
     
-    init(moduleName: Any? = nil, moduleCreator: @escaping ModuleCreator) {
-        moduleTag = TagWrapper(anyTag: moduleName ?? moduleCreator)
+    init(moduleName: Any, moduleCreator: @escaping ModuleCreator) {
+        moduleTag = TagWrapper(anyTag: moduleName)
         creator = moduleCreator
     }
     
@@ -59,6 +59,6 @@ final class SodiModule : ISodiModule {
     //    }
 }
 
-public func sodiModule(moduleCreator: @escaping ModuleCreator) -> ISodiModule {
-    return SodiModule(moduleCreator: moduleCreator)
+public func sodiModule(moduleName: Any, moduleCreator: @escaping ModuleCreator) -> ISodiModule {
+    return SodiModule(moduleName: moduleName, moduleCreator: moduleCreator)
 }

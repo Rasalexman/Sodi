@@ -34,12 +34,12 @@ internal final class Sodi {
         let tagWrapper = sodiHolder.tag
         if(!tagWrapper.isEmpty()) {
             let tagName: String = tagWrapper.toString()
-            //synced(localStorage) {
+            synced(localStorage) {
                 let holder = localStorage[tagName]
                 if(holder == nil && !tagName.isEmpty) {
                     localStorage[tagName] = sodiHolder
                 }
-            //}
+            }
         }
     }
     
@@ -47,11 +47,11 @@ internal final class Sodi {
         var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
         if tagWrapper.isNotEmpty() {
             let tagName: String = tagWrapper.toString()
-            //synced(localStorage) {
+            synced(localStorage) {
                 if let existedHolder = localStorage[tagName] {
                     holder = existedHolder
                 }
-            //}
+            }
         }
         return holder
     }
@@ -60,11 +60,11 @@ internal final class Sodi {
         var holder: Holder = EmptyHolder(tagWrapper: tagWrapper)
         if tagWrapper.isNotEmpty() {
             let tagName: String = tagWrapper.toString()
-            //synced(localStorage) {
+            synced(localStorage) {
                 if let removedHolder = localStorage.removeValue(forKey: tagName) {
                     holder = removedHolder
                 }
-            //}
+            }
         }
         
         return holder
@@ -73,7 +73,9 @@ internal final class Sodi {
     internal static func hasInstance(tagWrapper: TagWrapper) -> Bool {
         var hasInstanceInStorage = false
         let tagName: String = tagWrapper.toString()
-        hasInstanceInStorage = localStorage[tagName] != nil
+        synced(localStorage) {
+            hasInstanceInStorage = localStorage[tagName] != nil
+        }
         return hasInstanceInStorage
     }
     
@@ -81,9 +83,9 @@ internal final class Sodi {
         let hasModule = hasModule(sodiModule: sodiModule)
         if !hasModule {
             sodiModule.create()
-            //synced(localModules) {
+            synced(localModules) {
                 localModules.insert(sodiModule.toString())
-            //}
+            }
         }
         return !hasModule
     }
@@ -92,15 +94,19 @@ internal final class Sodi {
         let hasModule = hasModule(sodiModule: sodiModule)
         if hasModule {
             sodiModule.destroy()
-            //synced(localModules) {
+            synced(localModules) {
                 localModules.remove(sodiModule.toString())
-            //}
+            }
         }
         return hasModule
     }
     
     private static func hasModule(sodiModule: ISodiModule) -> Bool {
-        return localModules.contains(sodiModule.toString())
+        var alreadyHasModule = false
+        synced(localModules) {
+            alreadyHasModule = localModules.contains(sodiModule.toString())
+        }
+        return alreadyHasModule
     }
 }
 
